@@ -11,7 +11,7 @@ dependencies = [
     meson.get_compiler('c').find_library('XNVCtrl'),
     meson.get_compiler('c').find_library('X11'),
     meson.get_compiler('vala').find_library('libxnvctrl0', dirs: vapi_dir),
-    meson.get_compiler('vala').find_library('libx11-6', dirs: vapi_dir),
+    meson.get_compiler('vala').find_library('x11', dirs: vapi_dir),
 ]
 
 sources = files('nvstat.vala')

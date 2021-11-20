@@ -3,7 +3,7 @@ namespace NVCtrlLib {
    [Compact]
    [CCode (cname = "XNVCTRLQueryAttribute")]
    public bool XNVCTRLQueryAttribute (
-      Xlib.Display *dpy,
+      X.Display *dpy,
       int screen,
       uint display_mask,
       uint attribute,
@@ -12,7 +12,7 @@ namespace NVCtrlLib {
 
    [CCode (cname = "XNVCTRLQueryTargetAttribute")]
    public bool XNVCTRLQueryTargetAttribute (
-      Xlib.Display *dpy,
+      X.Display *dpy,
       int target_Type,
       int target_id,
       uint display_mask,
@@ -22,7 +22,7 @@ namespace NVCtrlLib {
 
    [CCode (cname = "XNVCTRLQueryTargetStringAttribute")]
    public bool XNVCTRLQueryTargetStringAttribute (
-      Xlib.Display *dpy,
+      X.Display *dpy,
       int target_type,
       int target_id,
       uint display_mask,

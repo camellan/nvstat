@@ -1,18 +1,19 @@
 using NVCtrlLib;
-using Xlib;
+using X;
 
 void main() {
     int temp = 0, u_mem = 0, t_mem = 0, u_freq = 0;
-    // uint32 freq = 0;
-    // uint16 gpu = 0;
-    // uint16 vmem = 0 ;
+    int freq = 0;
+    uint gpu = 0;
+    uint vmem = 0;
     char *used = "";
 
-    Display nvidia_display = new Display ();
+    Display nvidia_display = new Display();
 
-    // if (!(nvidia_display = XOpenDisplay(NULL))){
-    //     stdout.printf("Could not open display ");
-    // }
+    int screen = nvidia_display.get_default_screen ();
+    stdout.printf ("DEFAULT_SCREEN: %d\n", screen);
+
+
 
     var res = XNVCTRLQueryAttribute(
         nvidia_display,
@@ -27,21 +28,21 @@ void main() {
         return;
     }
 
-    // var res1 = XNVCTRLQueryAttribute(
-    //      nvidia_display,
-    //      0,
-    //      0,
-    //      NV_CTRL_GPU_CURRENT_CLOCK_FREQS,
-    //      &freq
-    // );
+    var res1 = XNVCTRLQueryAttribute(
+         nvidia_display,
+         0,
+         0,
+         NV_CTRL_GPU_CURRENT_CLOCK_FREQS,
+         &freq
+    );
 
-    // if(!res1) {
-    //     stdout.printf("Could not query NV_CTRL_GPU_CURRENT_CLOCK_FREQS attribute!\n");
-    //     return ;
-    // }
+    if(!res1) {
+        stdout.printf("Could not query NV_CTRL_GPU_CURRENT_CLOCK_FREQS attribute!\n");
+        return ;
+    }
 
-    // gpu = freq>>16;
-    // vmem = freq&0xFFFF;
+    gpu = freq>>16;
+    vmem = freq&0xFFFF;
 
     var res2 = XNVCTRLQueryAttribute(
          nvidia_display,
@@ -101,8 +102,8 @@ void main() {
     }
 
     stdout.printf("GPU_CORE_TEMPERATURE: %d°C\n", temp);
-    // stdout.printf("GPU_CLOCK_FREQS: %d MHz\n", gpu);
-    // stdout.printf("MEM_CLOCK_FREQS: %d MHz\n", vmem);
+    stdout.printf("GPU_CLOCK_FREQS: %d MHz\n", (int)gpu);
+    stdout.printf("MEM_CLOCK_FREQS: %d MHz\n", (int)vmem);
     stdout.printf("TOTAL_GPU_MEMORY: %d Gb\n", t_mem);
     stdout.printf("USED_GPU_MEMORY: %d Mb\n", u_mem);
     stdout.printf("CURRENT_PROCESSOR_CLOCK_FREQS: %d \n", u_freq);
