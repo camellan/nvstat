@@ -68,6 +68,12 @@ void main() {
             &used
     );
 
+    var str_used = (string)used;
+    var graphics = str_used.split_set("=,");
+
+    stdout.printf("USED_GRAPHICS: %s%\n", graphics[1]);
+    stdout.printf("USED_MEMORY: %s%\n", graphics[3]);
+
     if(!res3) {
         stdout.printf("Could not query NV_CTRL_STRING_GPU_UTILIZATION attribute!\n");
         return ;
