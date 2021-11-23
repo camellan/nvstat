@@ -1,19 +1,19 @@
-using NVCtrlLib;
+using NVCtrl;
 using X;
 
 void main() {
-    int temp = 0, u_mem = 0, t_mem = 0, u_freq = 0;
-    int freq = 0;
-    uint gpu = 0;
-    uint vmem = 0;
+    int temp = 0, u_mem = 0, t_mem = 0, u_freq = 0, freq = 0, v_info = 0;
+    int gpu;
+    int vmem;
+    int vendor;
+    int dev_id;
+    char *name = "";
     char *used = "";
 
     Display nvidia_display = new Display();
 
     int screen = nvidia_display.get_default_screen ();
     stdout.printf ("DEFAULT_SCREEN: %d\n", screen);
-
-
 
     var res = XNVCTRLQueryAttribute(
         nvidia_display,
@@ -69,10 +69,8 @@ void main() {
     );
 
     var str_used = (string)used;
-    var graphics = str_used.split_set("=,");
-
-    stdout.printf("USED_GRAPHICS: %s%\n", graphics[1]);
-    stdout.printf("USED_MEMORY: %s%\n", graphics[3]);
+    stdout.printf("USED_GRAPHICS: %s%\n", str_used.split_set("=,")[1]);
+    stdout.printf("USED_MEMORY: %s%\n", str_used.split_set("=,")[3]);
 
     if(!res3) {
         stdout.printf("Could not query NV_CTRL_STRING_GPU_UTILIZATION attribute!\n");
@@ -107,11 +105,46 @@ void main() {
         return ;
     }
 
+    var res6 = XNVCTRLQueryTargetStringAttribute(
+            nvidia_display,
+            NV_CTRL_TARGET_TYPE_GPU,
+            0,
+            0,
+            NV_CTRL_STRING_PRODUCT_NAME,
+            &name
+    );
+
+    if(!res6) {
+        stdout.printf("Could not query NV_CTRL_STRING_PRODUCT_NAME attribute!\n");
+        return ;
+    }
+
+
+    var res7 = XNVCTRLQueryTargetAttribute(
+         nvidia_display,
+         NV_CTRL_TARGET_TYPE_GPU,
+         0,
+         0,
+         NV_CTRL_PCI_ID,
+         &v_info
+    );
+
+    if(!res7) {
+        stdout.printf("Could not query NV_CTRL_PCI_ID attribute!\n");
+        return ;
+    }
+
+    vendor = v_info>>16;
+    dev_id = v_info&0xFFFF;
+
     stdout.printf("GPU_CORE_TEMPERATURE: %d°C\n", temp);
     stdout.printf("GPU_CLOCK_FREQS: %d MHz\n", (int)gpu);
     stdout.printf("MEM_CLOCK_FREQS: %d MHz\n", (int)vmem);
     stdout.printf("TOTAL_GPU_MEMORY: %d Gb\n", t_mem);
     stdout.printf("USED_GPU_MEMORY: %d Mb\n", u_mem);
     stdout.printf("CURRENT_PROCESSOR_CLOCK_FREQS: %d \n", u_freq);
-    stdout.printf("GPU_UTILIZATION: %s\n", (string) used);
+    stdout.printf("GPU_UTILIZATION: %s\n", (string)used);
+    stdout.printf("PRODUCT_NAME: %s\n", (string)name);
+    stdout.printf("VENDOR_ID: %d\n", vendor);
+    stdout.printf("DEVICE_ID: %d\n", dev_id);
 }
